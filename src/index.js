@@ -1,16 +1,20 @@
+// import SimpleLightbox from 'simplelightbox';
+
 const API_KEY = '37446225-ced4f53dd81a7d760f8a029fd';
 const BASE_URL = 'https://pixabay.com/api/';
-let currentPage = 1;
 
 const galleryEl = document.querySelector('.gallery');
 const btnLoadMoreEl = document.querySelector('.load-more');
-let userSearch = '';
 // const formEl = document.querySelector('#search-form');
+
+let currentPage = 1;
+let userSearch = '';
 
 document
   .getElementById('search-button')
   .addEventListener('click', function (event) {
     event.preventDefault();
+    btnLoadMoreEl.hidden = false;
     // Отримуємо значення, введене користувачем у текстове поле
     userSearch = document.getElementsByName('searchQuery')[0].value;
     if (userSearch !== '') {
@@ -29,6 +33,7 @@ btnLoadMoreEl.addEventListener('click', () => {
   currentPage += 1;
   logJSONData(currentPage);
 });
+
 async function logJSONData(currentPage) {
   console.log('message', userSearch);
   const response = await fetch(
@@ -44,7 +49,9 @@ function renderCard(items) {
     const cardEl = document.createElement('div');
     cardEl.classList.add('photo-card');
     cardEl.innerHTML = `
-      <img src="${item.webformatURL}" alt="${item.tags}" width="400" height="300" loading="lazy" />
+      <a href="${item.largeImageURL}" data-lightbox="gallery">
+        <img src="${item.webformatURL}" alt="${item.tags}" width="400" height="300" loading="lazy" />
+      </a>
       <div class="info">
         <p class="info-item">
           <b>Likes<span>${item.likes}</span> </b>
@@ -62,4 +69,11 @@ function renderCard(items) {
     `;
     galleryEl.appendChild(cardEl);
   });
+
+  // Ініціалізуємо Simplelightbox після додавання зображень до DOM
+  const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 }
+``;
