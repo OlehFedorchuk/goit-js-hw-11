@@ -71,3 +71,15 @@ input {
 
 
 }
+
+.sl-current {
+    display: none;
+}
+
+div .sl-counter {
+    display: none;
+}
+
+.sl-total {
+    display: none;
+}

@@ -1,5 +1,5 @@
-// import SimpleLightbox from 'simplelightbox';
-
+import SimpleLightbox from 'simplelightbox';
+import Notiflix from 'notiflix';
 const API_KEY = '37446225-ced4f53dd81a7d760f8a029fd';
 const BASE_URL = 'https://pixabay.com/api/';
 
@@ -40,6 +40,13 @@ async function logJSONData(currentPage) {
     `${BASE_URL}?key=${API_KEY}&q=${userSearch}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`
   );
   const jsonData = await response.json();
+  if (jsonData.hits.length === 0) {
+    Notiflix.Notify.failure(
+      `Sorry, there are no images matching your search query. Please try again.`
+    );
+  } else {
+    Notiflix.Notify.success(`Hooray! We found ${jsonData.totalHits} images.`);
+  }
   console.log('jsondata', jsonData);
   renderCard(jsonData);
 }
@@ -71,9 +78,5 @@ function renderCard(items) {
   });
 
   // Ініціалізуємо Simplelightbox після додавання зображень до DOM
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  const lightbox = new SimpleLightbox('.gallery a', {});
 }
-``;
