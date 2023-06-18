@@ -5,7 +5,6 @@ const BASE_URL = 'https://pixabay.com/api/';
 
 const galleryEl = document.querySelector('.gallery');
 const btnLoadMoreEl = document.querySelector('.load-more');
-// const formEl = document.querySelector('#search-form');
 
 let currentPage = 1;
 let userSearch = '';
@@ -22,7 +21,7 @@ document
       currentPage = 1;
       console.log('currentPage', currentPage);
     }
-    // Приклад виведення значення у консоль:
+    //  Bиведення значення у консоль:
     console.log('Пошуковий запит:', userSearch);
 
     logJSONData(currentPage);
@@ -61,16 +60,16 @@ function renderCard(items) {
       </a>
       <div class="info">
         <p class="info-item">
-          <b>Likes<span>${item.likes}</span> </b>
+          <b>Likes<span class='span'>${item.likes}</span> </b>
         </p>
         <p class="info-item">
-          <b>Views <span>${item.views}</span></b>
+          <b>Views <span class='span'>${item.views}</span></b>
         </p>
         <p class="info-item">
-          <b>Comments<span>${item.comments}</span></b>
+          <b>Comments<span class='span'>${item.comments}</span></b>
         </p>
         <p class="info-item">
-          <b>Downloads <span>${item.downloads}</span></b>
+          <b>Downloads <span class='span'>${item.downloads}</span></b>
         </p>
       </div>
     `;
