@@ -2,7 +2,7 @@ const API_KEY = '37446225-ced4f53dd81a7d760f8a029fd';
 const BASE_URL = 'https://pixabay.com/api/';
 let currentPage = 1;
 
-formEl = document.querySelector('#search-form');
+// formEl = document.querySelector('#search-form');
 galleryEl = document.querySelector('.gallery');
 btnLoadMoreEl = document.querySelector('.load-more');
 // btnSearchEl = document.querySelector('.searchBtn');
