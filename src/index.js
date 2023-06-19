@@ -10,7 +10,7 @@ const btnLoadMoreEl = document.querySelector('.load-more');
 
 let currentPage = 1;
 let userSearch = '';
-
+let test = true;
 document
   .getElementById('search-button')
   .addEventListener('click', function (event) {
@@ -19,6 +19,7 @@ document
     // Отримуємо значення, введене користувачем у текстове поле
     userSearch = document.getElementsByName('searchQuery')[0].value;
     if (userSearch !== '') {
+      test = true;
       galleryEl.innerHTML = '';
       currentPage = 1;
       console.log('currentPage', currentPage);
@@ -29,6 +30,7 @@ document
   });
 
 btnLoadMoreEl.addEventListener('click', () => {
+  test = false;
   console.log('loadMore');
   currentPage += 1;
   console.log('cuPAGE', currentPage);
@@ -44,7 +46,7 @@ async function fetchIMG() {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: 'true',
-        per_page: 4,
+        per_page: 40,
         page: currentPage,
       },
     })
@@ -55,7 +57,7 @@ async function fetchIMG() {
         Notiflix.Notify.failure(
           `Sorry, there are no images matching your search query. Please try again.`
         );
-      } else {
+      } else if (test) {
         Notiflix.Notify.success(
           `Hooray! We found ${response.data.totalHits} images.`
         );
