@@ -1,5 +1,7 @@
 import SimpleLightbox from 'simplelightbox';
 import Notiflix from 'notiflix';
+import axios from 'axios';
+
 const API_KEY = '37446225-ced4f53dd81a7d760f8a029fd';
 const BASE_URL = 'https://pixabay.com/api/';
 
@@ -23,34 +25,48 @@ document
     }
     //  Bиведення значення у консоль:
     console.log('Пошуковий запит:', userSearch);
-
-    logJSONData(currentPage);
+    fetchIMG(currentPage);
   });
 
 btnLoadMoreEl.addEventListener('click', () => {
   console.log('loadMore');
   currentPage += 1;
-  logJSONData(currentPage);
+  console.log('cuPAGE', currentPage);
+  fetchIMG(currentPage);
 });
-
-async function logJSONData(currentPage) {
-  console.log('message', userSearch);
-  const response = await fetch(
-    `${BASE_URL}?key=${API_KEY}&q=${userSearch}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`
-  );
-  const jsonData = await response.json();
-  if (jsonData.hits.length === 0) {
-    Notiflix.Notify.failure(
-      `Sorry, there are no images matching your search query. Please try again.`
-    );
-  } else {
-    Notiflix.Notify.success(`Hooray! We found ${jsonData.totalHits} images.`);
-  }
-  console.log('jsondata', jsonData);
-  renderCard(jsonData);
+async function fetchIMG() {
+  console.log('inputValue');
+  return axios
+    .get(`${BASE_URL}`, {
+      params: {
+        key: API_KEY,
+        q: userSearch,
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: 'true',
+        per_page: 4,
+        page: currentPage,
+      },
+    })
+    .then(response => {
+      console.log('response.data.hits', response.data);
+      if (response.data.hits.length === 0) {
+        btnLoadMoreEl.hidden = true;
+        Notiflix.Notify.failure(
+          `Sorry, there are no images matching your search query. Please try again.`
+        );
+      } else {
+        Notiflix.Notify.success(
+          `Hooray! We found ${response.data.totalHits} images.`
+        );
+      }
+      renderCard(response.data);
+    })
+    .catch(error => console.log('error', error));
 }
 
 function renderCard(items) {
+  console.log('render', items);
   items.hits.forEach(item => {
     const cardEl = document.createElement('div');
     cardEl.classList.add('photo-card');
@@ -76,6 +92,5 @@ function renderCard(items) {
     galleryEl.appendChild(cardEl);
   });
 
-  // Ініціалізуємо Simplelightbox після додавання зображень до DOM
   const lightbox = new SimpleLightbox('.gallery a', {});
 }
