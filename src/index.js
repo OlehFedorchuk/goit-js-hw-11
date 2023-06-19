@@ -11,33 +11,32 @@ const btnLoadMoreEl = document.querySelector('.load-more');
 let currentPage = 1;
 let userSearch = '';
 let test = true;
+
 document
   .getElementById('search-button')
   .addEventListener('click', function (event) {
     event.preventDefault();
+
     btnLoadMoreEl.hidden = false;
-    // Отримуємо значення, введене користувачем у текстове поле
+
     userSearch = document.getElementsByName('searchQuery')[0].value;
+
     if (userSearch !== '') {
       test = true;
       galleryEl.innerHTML = '';
       currentPage = 1;
-      console.log('currentPage', currentPage);
     }
-    //  Bиведення значення у консоль:
-    console.log('Пошуковий запит:', userSearch);
+
     fetchIMG(currentPage);
   });
 
 btnLoadMoreEl.addEventListener('click', () => {
   test = false;
-  console.log('loadMore');
   currentPage += 1;
-  console.log('cuPAGE', currentPage);
   fetchIMG(currentPage);
 });
+
 async function fetchIMG() {
-  console.log('inputValue');
   return axios
     .get(`${BASE_URL}`, {
       params: {
@@ -51,7 +50,6 @@ async function fetchIMG() {
       },
     })
     .then(response => {
-      console.log('response.data.hits', response.data);
       if (response.data.hits.length === 0) {
         btnLoadMoreEl.hidden = true;
         Notiflix.Notify.failure(
