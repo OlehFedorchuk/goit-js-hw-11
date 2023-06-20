@@ -2,7 +2,6 @@ import SimpleLightbox from 'simplelightbox';
 let lightbox;
 const galleryEl = document.querySelector('.gallery');
 export function renderCard(items) {
-  console.log('render', items);
   items.hits.forEach(item => {
     const cardEl = document.createElement('div');
     cardEl.classList.add('photo-card');

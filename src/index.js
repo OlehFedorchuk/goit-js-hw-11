@@ -46,8 +46,7 @@ btnLoadMoreEl.addEventListener('click', () => {
   currentPage += 1;
   fetchIMG(currentPage, userSearch)
     .then(response => {
-      if (('message', response.data.hits.length === 0)) {
-        console.log('0000000');
+      if (response.data.hits.length === 0) {
         btnLoadMoreEl.hidden = true;
         Notiflix.Notify.failure(
           `Sorry, there are no images matching your search query. Please try again.`
