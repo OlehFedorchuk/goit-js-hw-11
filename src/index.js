@@ -1,14 +1,10 @@
-import SimpleLightbox from 'simplelightbox';
 import Notiflix from 'notiflix';
-import axios from 'axios';
-
-const API_KEY = '37446225-ced4f53dd81a7d760f8a029fd';
-const BASE_URL = 'https://pixabay.com/api/';
+import { fetchIMG } from './api.js';
+import { renderCard } from './render.js';
 
 const galleryEl = document.querySelector('.gallery');
 const btnLoadMoreEl = document.querySelector('.load-more');
 
-let lightbox;
 let currentPage = 1;
 let userSearch = '';
 let test = true;
@@ -28,74 +24,36 @@ document
       currentPage = 1;
     }
 
-    fetchIMG(currentPage);
+    fetchIMG(currentPage, userSearch)
+      .then(response => {
+        if (response.data.hits.length === 0) {
+          btnLoadMoreEl.hidden = true;
+          Notiflix.Notify.failure(
+            `Sorry, there are no images matching your search query. Please try again.`
+          );
+        } else if (test) {
+          Notiflix.Notify.success(
+            `Hooray! We found ${response.data.totalHits} images.`
+          );
+        }
+        renderCard(response.data);
+      })
+      .catch(error => console.log('error', error));
   });
 
 btnLoadMoreEl.addEventListener('click', () => {
   test = false;
   currentPage += 1;
-  fetchIMG(currentPage);
-});
-
-async function fetchIMG() {
-  return axios
-    .get(`${BASE_URL}`, {
-      params: {
-        key: API_KEY,
-        q: userSearch,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: 'true',
-        per_page: 40,
-        page: currentPage,
-      },
-    })
+  fetchIMG(currentPage, userSearch)
     .then(response => {
-      if (response.data.hits.length === 0) {
+      if (('message', response.data.hits.length === 0)) {
+        console.log('0000000');
         btnLoadMoreEl.hidden = true;
         Notiflix.Notify.failure(
           `Sorry, there are no images matching your search query. Please try again.`
-        );
-      } else if (test) {
-        Notiflix.Notify.success(
-          `Hooray! We found ${response.data.totalHits} images.`
         );
       }
       renderCard(response.data);
     })
     .catch(error => console.log('error', error));
-}
-
-function renderCard(items) {
-  console.log('render', items);
-  items.hits.forEach(item => {
-    const cardEl = document.createElement('div');
-    cardEl.classList.add('photo-card');
-    cardEl.innerHTML = `
-      <a href="${item.largeImageURL}" data-lightbox="gallery">
-        <img src="${item.webformatURL}" alt="${item.tags}" width="400" height="300" loading="lazy" />
-      </a>
-      <div class="info">
-        <p class="info-item">
-          <b>Likes<span class='span'>${item.likes}</span> </b>
-        </p>
-        <p class="info-item">
-          <b>Views <span class='span'>${item.views}</span></b>
-        </p>
-        <p class="info-item">
-          <b>Comments<span class='span'>${item.comments}</span></b>
-        </p>
-        <p class="info-item">
-          <b>Downloads <span class='span'>${item.downloads}</span></b>
-        </p>
-      </div>
-    `;
-    galleryEl.appendChild(cardEl);
-  });
-
-  if (lightbox) {
-    lightbox.refresh();
-  } else {
-    lightbox = new SimpleLightbox('.gallery a', {});
-  }
-}
+});
