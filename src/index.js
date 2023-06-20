@@ -8,6 +8,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 const galleryEl = document.querySelector('.gallery');
 const btnLoadMoreEl = document.querySelector('.load-more');
 
+let lightbox;
 let currentPage = 1;
 let userSearch = '';
 let test = true;
@@ -92,5 +93,9 @@ function renderCard(items) {
     galleryEl.appendChild(cardEl);
   });
 
-  const lightbox = new SimpleLightbox('.gallery a', {});
+  if (lightbox) {
+    lightbox.refresh();
+  } else {
+    lightbox = new SimpleLightbox('.gallery a', {});
+  }
 }
